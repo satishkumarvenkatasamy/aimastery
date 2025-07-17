@@ -196,10 +196,164 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - **Scikit-learn**: For machine learning utilities
 - **NumPy/Pandas**: For numerical computing and data manipulation
 
+## AI Mastery Session 02 Source Code
+
+This session introduces practical applications of Large Language Models (LLMs) with function calling capabilities and PDF processing for AI-powered document analysis.
+
+### llm_chat_app.py - LLM Function Calling Application
+
+**Description**: A comprehensive educational application demonstrating how to build chatbots that can execute custom functions using LLMs like Mistral AI and OpenAI's GPT models.
+
+**What You'll Learn**:
+
+**Core LLM Concepts**:
+- **Function Calling**: How LLMs can execute custom Python functions based on user requests
+- **API Integration**: Connecting to Mistral AI and OpenAI services with proper authentication
+- **Streaming Responses**: Real-time text generation for interactive chat experiences
+- **JSON Schema**: Defining function parameters and return types for LLM understanding
+
+**Python Programming Skills**:
+- **Advanced File Operations**: Pattern matching with glob, recursive directory traversal
+- **Exception Handling**: Graceful error management in production applications
+- **Type Hints**: Professional code documentation with Python's typing system
+- **Dataclasses**: Modern Python data structure patterns
+- **Command Line Interfaces**: Using argparse for professional CLI applications
+
+**Software Engineering Patterns**:
+- **API Client Design**: Building robust connections to external services
+- **Configuration Management**: Handling API keys and environment variables securely
+- **Modular Architecture**: Separating concerns with classes and methods
+- **Error Recovery**: Handling network failures and API rate limits
+
+**Function Calling Implementation**:
+- **Tool Definition**: Creating JSON schemas that describe available functions
+- **Parameter Validation**: Ensuring proper argument types and required fields
+- **Result Processing**: Converting Python objects to LLM-readable formats
+- **Context Management**: Maintaining conversation state and history
+
+**Advanced Features**:
+- **Enhanced Text Search**: Regular expressions, case sensitivity, whole-word matching
+- **Context-Aware Results**: Showing surrounding lines for better understanding
+- **File Type Filtering**: Searching specific file extensions efficiently
+- **Result Limiting**: Preventing overwhelming output with smart pagination
+
+**Usage Instructions**:
+```bash
+# Install required dependencies
+pip install mistralai openai
+
+# Set up API keys (choose one)
+export MISTRAL_API_KEY="your-mistral-key"
+export OPENAI_API_KEY="your-openai-key"
+
+# Run with Mistral AI (default)
+python llm_chat_app.py --provider mistral
+
+# Run with OpenAI
+python llm_chat_app.py --provider openai
+
+# Enable streaming responses
+python llm_chat_app.py --provider mistral --stream
+
+# Specify working directory
+python llm_chat_app.py --working-dir /path/to/your/project
+```
+
+**Example Interactions**:
+```
+You: List all Python files in this directory
+Assistant: [Calls list_files function with pattern="*.py"]
+
+You: Search for "import pandas" in my code
+Assistant: [Calls search_files function to find pandas imports]
+
+You: Create a README file for my project
+Assistant: [Calls create_text_file function to generate documentation]
+```
+
+### PDF_Chat_Solution.ipynb - AI-Powered PDF Processing
+
+**Description**: A complete Jupyter notebook demonstrating how to build an AI assistant that can process, analyze, and interact with PDF documents using advanced extraction techniques.
+
+**What You'll Learn**:
+
+**PDF Processing Mastery**:
+- **Text Extraction**: Converting PDF content to searchable, analyzable text
+- **Image Extraction**: Extracting embedded images with proper colorspace handling
+- **Table Extraction**: Identifying and extracting tabular data from PDFs
+- **Metadata Analysis**: Understanding PDF structure and properties
+
+**Advanced Image Processing**:
+- **CMYK to RGB Conversion**: Handling professional printing colorspaces
+- **Multiple Extraction Methods**: Pixmap extraction and direct byte processing
+- **Error Handling**: Graceful handling of corrupted or protected images
+- **Format Optimization**: Converting to efficient formats for analysis
+
+**AI Integration Patterns**:
+- **Document Question Answering**: Ask questions about PDF content
+- **Content Summarization**: Generate summaries of lengthy documents
+- **Information Extraction**: Pull specific data points from documents
+- **Multi-modal Processing**: Combining text and image analysis
+
+**PyMuPDF (fitz) Library**:
+- **Document Navigation**: Iterating through pages and elements
+- **Object Extraction**: Accessing fonts, images, and annotations
+- **Rendering Control**: Converting pages to images for analysis
+- **Memory Management**: Efficient handling of large documents
+
+**Mistral AI Integration**:
+- **New API Format**: Using UserMessage, SystemMessage, AssistantMessage classes
+- **Streaming Implementation**: Real-time response generation
+- **Function Calling**: Integrating PDF operations as AI tools
+- **Error Recovery**: Handling API failures gracefully
+
+**Self-Contained Design**:
+- **No External Dependencies**: All functions included in the notebook
+- **Portable Solution**: Works without additional files or modules
+- **Educational Structure**: Clear explanations for each code block
+- **Debugging Capabilities**: Built-in troubleshooting and logging
+
+**Usage Instructions**:
+```bash
+# Install required dependencies
+pip install PyMuPDF mistralai pillow pandas
+
+# Set up Mistral API key
+export MISTRAL_API_KEY="your-mistral-key"
+
+# Open Jupyter notebook
+jupyter notebook PDF_Chat_Solution.ipynb
+
+# Follow the notebook cells to:
+# 1. Configure API settings
+# 2. Upload or specify PDF file path
+# 3. Run extraction functions
+# 4. Start interactive chat with your PDF
+```
+
+**Key Features Demonstrated**:
+- **Enhanced Image Extraction**: Solves macOS blank image issues with proper colorspace conversion
+- **Interactive PDF Chat**: Ask questions about your PDF content
+- **Comprehensive Extraction**: Text, images, tables, and metadata
+- **Production-Ready Code**: Error handling, logging, and optimization
+- **Educational Value**: Step-by-step explanations of each process
+
+**Learning Outcomes**:
+- Build production-ready PDF processing applications
+- Integrate multiple AI services (Mistral, OpenAI) seamlessly
+- Handle complex document formats and extraction challenges
+- Create interactive AI applications with real-time capabilities
+- Understand modern LLM integration patterns and best practices
+
+**Prerequisites**:
+- Python 3.8+ with virtual environment
+- Jupyter Notebook or JupyterLab
+- API access to Mistral AI or OpenAI
+- Basic understanding of file operations and JSON
+
 ## Future Sessions
 
 This series will continue with:
-- **Session 2**: Generative AI and LLMs
 - **Session 3**: Advanced techniques with RAG and Model Context Protocol
 - **Session 4**: Building no-code AI agents
 
