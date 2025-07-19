@@ -11,7 +11,7 @@ completion = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "what did Modi do in phalgam attack?"
+            "content": "What is knowledge graph?"
         }
     ],
 )
@@ -23,7 +23,7 @@ completion = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "what did Modi do in phalgam attack?"
+            "content": "Explain graph database in 5 bullet points."
         }
     ],
 )
@@ -35,7 +35,7 @@ completion = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "what did Modi do in phalgam attack?"
+            "content": "Explain the difference between encode only transformer and decoder only transformer."
         }
     ],
 )
