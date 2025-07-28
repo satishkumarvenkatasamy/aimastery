@@ -2,7 +2,7 @@ import os
 from huggingface_hub import InferenceClient
 
 client = InferenceClient(
-    provider="hyperbolic",
+    provider="groq",
     api_key=os.environ["HF_TOKEN"],
 )
 
@@ -35,7 +35,20 @@ completion = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "Explain the difference between encode only transformer and decoder only transformer."
+            "content": "Explain no-sql database. What are the different types of nosql databases?"
+        }
+    ],
+)
+
+print(completion.choices[0].message)
+
+completion = client.chat.completions.create(
+    model="deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+    messages=[
+        {
+            "role": "user",
+            "content": "Explain what is decoder only transformer."
+>>>>>>> fe8c2d9 (Fix model name issue)
         }
     ],
 )
