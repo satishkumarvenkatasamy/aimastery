@@ -246,6 +246,110 @@ class FileOperations:
         
         return results
     
+    def search_text_files(self, keyword: str, file_extensions: List[str] = None, case_sensitive: bool = False, whole_word: bool = False, max_results: int = 100) -> List[Dict[str, Any]]:
+        """
+         ENHANCED TEXT FILE SEARCH FUNCTION
+        
+        This function provides advanced search capabilities specifically for text files
+        with better filtering and search options.
+        
+         WHAT IT DOES:
+        - Searches for keywords in text files with advanced options
+        - Supports case-sensitive/insensitive search
+        - Supports whole word matching
+        - Filters by specific file extensions
+        - Limits results to prevent overwhelming output
+        - Shows context around matches (line before and after)
+        
+         PYTHON CONCEPTS:
+        - Regular expressions: for advanced pattern matching
+        - File extension filtering: more precise than basic search
+        - Context lines: showing surrounding text for better understanding
+        - Result limiting: preventing too much output
+        
+         EXAMPLES:
+        - keyword="import", file_extensions=[".py"] → finds Python imports
+        - keyword="TODO", case_sensitive=False → finds all todo comments
+        - keyword="function", whole_word=True → finds exact word matches
+        
+        Args:
+            keyword: The text to search for
+            file_extensions: List of extensions to search (e.g., ['.txt', '.py', '.md'])
+            case_sensitive: Whether search should be case sensitive (default: False)
+            whole_word: Whether to match whole words only (default: False)
+            max_results: Maximum number of result entries to return (default: 100)
+            
+        Returns:
+            List of dictionaries with detailed match information including context
+        """
+        import re
+        
+        results = []
+        
+        # Default text file extensions if none specified
+        if file_extensions is None:
+            file_extensions = ['.txt', '.py', '.md', '.json', '.csv', '.log', '.yml', '.yaml', '.js', '.ts', '.html', '.css', '.xml', '.ini', '.cfg', '.conf']
+        
+        # Prepare search pattern
+        if whole_word:
+            pattern = r'\b' + re.escape(keyword) + r'\b'
+        else:
+            pattern = re.escape(keyword)
+        
+        flags = 0 if case_sensitive else re.IGNORECASE
+        search_regex = re.compile(pattern, flags)
+        
+        # Walk through all directories and subdirectories
+        for root, dirs, files in os.walk(self.working_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                
+                # Check if file has desired extension
+                if not any(file_path.lower().endswith(ext.lower()) for ext in file_extensions):
+                    continue
+                
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        lines = f.readlines()
+                        
+                    rel_path = os.path.relpath(file_path, self.working_dir)
+                    matches = []
+                    
+                    for i, line in enumerate(lines):
+                        if search_regex.search(line):
+                            # Get context lines (previous and next line)
+                            context_before = lines[i-1].strip() if i > 0 else ""
+                            context_after = lines[i+1].strip() if i < len(lines)-1 else ""
+                            
+                            match_info = {
+                                "line_number": i + 1,
+                                "content": line.strip(),
+                                "context_before": context_before,
+                                "context_after": context_after
+                            }
+                            matches.append(match_info)
+                    
+                    if matches:
+                        results.append({
+                            "file": rel_path,
+                            "match_count": len(matches),
+                            "matches": matches[:10]  # Limit matches per file to 10
+                        })
+                        
+                        # Stop if we've reached max results
+                        if len(results) >= max_results:
+                            break
+                            
+                except (UnicodeDecodeError, PermissionError, IsADirectoryError):
+                    # Skip files that can't be read
+                    continue
+            
+            # Break outer loop if max results reached
+            if len(results) >= max_results:
+                break
+        
+        return results
+    
     def create_text_file(self, filename: str, content: str) -> str:
         """
          CREATE TEXT FILE FUNCTION
@@ -421,6 +525,37 @@ class LLMChatApp:
                 }
             },
             {
+                "name": "search_text_files",
+                "description": "Advanced search for keywords in text files with filtering and context options",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "keyword": {
+                            "type": "string",
+                            "description": "The keyword to search for in text files"
+                        },
+                        "file_extensions": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "List of file extensions to search (e.g., ['.py', '.txt', '.md']). If not provided, searches common text file types."
+                        },
+                        "case_sensitive": {
+                            "type": "boolean",
+                            "description": "Whether the search should be case sensitive (default: false)"
+                        },
+                        "whole_word": {
+                            "type": "boolean", 
+                            "description": "Whether to match whole words only (default: false)"
+                        },
+                        "max_results": {
+                            "type": "integer",
+                            "description": "Maximum number of files to return results for (default: 100)"
+                        }
+                    },
+                    "required": ["keyword"]
+                }
+            },
+            {
                 "name": "create_text_file",
                 "description": "Create a text file with LLM-generated content based on a topic",
                 "parameters": {
@@ -490,6 +625,15 @@ class LLMChatApp:
                 by_name = arguments.get("by_name", True)
                 by_content = arguments.get("by_content", True)
                 result = self.file_ops.search_files(keyword, by_name, by_content)
+                return json.dumps(result, indent=2)
+            
+            elif function_name == "search_text_files":
+                keyword = arguments["keyword"]
+                file_extensions = arguments.get("file_extensions", None)
+                case_sensitive = arguments.get("case_sensitive", False)
+                whole_word = arguments.get("whole_word", False)
+                max_results = arguments.get("max_results", 100)
+                result = self.file_ops.search_text_files(keyword, file_extensions, case_sensitive, whole_word, max_results)
                 return json.dumps(result, indent=2)
             
             elif function_name == "create_text_file":
@@ -750,6 +894,7 @@ def main():
     print("\nAvailable functions:")
     print("- list_files: List files matching a pattern")
     print("- search_files: Search files by name or content")
+    print("- search_text_files: Advanced text file search with filtering and context")
     print("- create_text_file: Create a text file with LLM-generated content")
     print("\nType 'quit' to exit\n")
     

@@ -23,6 +23,14 @@ python -m ensurepip --upgrade
 python openai-httpx.py
 '''
 
+def log_request(request):
+    print(f"Request event hook: {request.method} {request.url} - Waiting for response")
+
+def log_response(response):
+    request = response.request
+    print(f"Response event hook: {request.method} {request.url} - Status {response.status_code}")
+
+
 #
 api_key_filename = "/Users/satishkumar/openai.key"
 with open(api_key_filename, "r") as apikeyfile:
@@ -35,14 +43,16 @@ headers = {"Authorization": "Bearer "+openai_api_key,
 rest_api_endpoint = "https://api.openai.com/v1/responses"
 
 model_name = "gpt-4o"
-your_ask = "Explain what is graph database in 5 bulleted points."
+your_ask = "Who is the vice president of India?"
 
 body = f"""{{ 
                "model": "{model_name}",
                "input": "{your_ask}"
             }}"""
 
-client = httpx.Client(headers=headers)
+
+client = httpx.Client(event_hooks={'request': [log_request], 'response': [log_response]}, headers=headers)
+#client = httpx.Client(headers=headers)
 response = client.post(rest_api_endpoint, data=body, timeout=10.0)
 
 if response.status_code != 200:
